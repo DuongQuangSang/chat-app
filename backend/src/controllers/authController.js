@@ -113,3 +113,26 @@ export const signIn = async (req, res) => {
     return res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };
+
+/**
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ */
+export const signOut = async (req, res) => {
+  try {
+    // lấy refresh token từ cookie
+    const token = req.cookies?.refreshToken;
+
+    // xóa refresh token trong Session
+    if (token) {
+      await Session.deleteOne({ refreshToken: token });
+
+      // xóa cookie
+      res.clearCookie("refreshToken");
+      return res.status(204);
+    }
+  } catch (error) {
+    console.error("Lỗi khi gọi signOut", error);
+    return res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};
