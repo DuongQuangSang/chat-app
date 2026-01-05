@@ -96,10 +96,11 @@ export const signIn = async (req, res) => {
     });
 
     // trả refresh token về trong cookie
+    const isProd = process.env.NODE_ENV === "production";
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       maxAge: REFRESH_TOKEN_TTL,
     });
 
