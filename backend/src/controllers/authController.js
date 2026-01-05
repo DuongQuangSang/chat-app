@@ -96,10 +96,11 @@ export const signIn = async (req, res) => {
     });
 
     // trả refresh token về trong cookie
+    const isProd = process.env.NODE_ENV === "production";
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       maxAge: REFRESH_TOKEN_TTL,
     });
 
@@ -129,7 +130,7 @@ export const signOut = async (req, res) => {
 
       // xóa cookie
       res.clearCookie("refreshToken");
-      return res.status(204);
+      return res.sendStatus(204);
     }
   } catch (error) {
     console.error("Lỗi khi gọi signOut", error);
