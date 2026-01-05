@@ -10,7 +10,7 @@ const protectedRoute = (req, res, next) => {
   try {
     // lấy token từ header
     const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.slip(" ")[1];
+    const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({ message: "Không tìm thấy access token" });
