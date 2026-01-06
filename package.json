@@ -1,0 +1,9 @@
+{
+  "name": "moji",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "shared"
+  ]
+}
