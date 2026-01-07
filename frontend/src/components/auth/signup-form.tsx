@@ -8,13 +8,14 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signUpSchema } from "@moji/shared";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useNavigate } from "react-router";
 
 type SignUpFormInput = z.infer<typeof signUpSchema>;
 
-export function SignupForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+export function SignupForm({ className, ...props }: React.ComponentProps<"div">) {
+  const { signUp } = useAuthStore();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -25,6 +26,12 @@ export function SignupForm({
 
   const onSubmit = async (data: SignUpFormInput) => {
     // gọi API signup
+    try {
+      await signUp(data);
+      navigate("/signin");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -40,9 +47,7 @@ export function SignupForm({
                 </a>
 
                 <h1 className="text-2xl font-bold">Tạo tài khoản Moji</h1>
-                <p className="text-muted-foreground text-balance">
-                  Chào mừng bạn! Hãy đăng ký để bắt đầu
-                </p>
+                <p className="text-muted-foreground text-balance">Chào mừng bạn! Hãy đăng ký để bắt đầu</p>
               </div>
 
               {/* họ và tên */}
@@ -51,33 +56,17 @@ export function SignupForm({
                   <Label htmlFor="lastName" className="block text-sm">
                     Họ
                   </Label>
-                  <Input
-                    type="text"
-                    id="lastname"
-                    {...register("lastName")}
-                  ></Input>
+                  <Input type="text" id="lastname" {...register("lastName")}></Input>
 
-                  {errors.lastName && (
-                    <p className="text-destructive text-sm">
-                      {errors.lastName.message}
-                    </p>
-                  )}
+                  {errors.lastName && <p className="text-destructive text-sm">{errors.lastName.message}</p>}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="firstname" className="block text-sm">
                     Tên
                   </Label>
-                  <Input
-                    type="text"
-                    id="firstname"
-                    {...register("firstName")}
-                  ></Input>
-                  {errors.firstName && (
-                    <p className="text-destructive text-sm">
-                      {errors.firstName.message}
-                    </p>
-                  )}
+                  <Input type="text" id="firstname" {...register("firstName")}></Input>
+                  {errors.firstName && <p className="text-destructive text-sm">{errors.firstName.message}</p>}
                 </div>
               </div>
 
@@ -87,17 +76,8 @@ export function SignupForm({
                   <Label htmlFor="username" className="block text-sm">
                     Tên đăng nhập
                   </Label>
-                  <Input
-                    type="text"
-                    id="username"
-                    placeholder="Moji"
-                    {...register("username")}
-                  ></Input>
-                  {errors.username && (
-                    <p className="text-destructive text-sm">
-                      {errors.username.message}
-                    </p>
-                  )}
+                  <Input type="text" id="username" placeholder="Moji" {...register("username")}></Input>
+                  {errors.username && <p className="text-destructive text-sm">{errors.username.message}</p>}
                 </div>
               </div>
 
@@ -107,17 +87,8 @@ export function SignupForm({
                   <Label htmlFor="email" className="block text-sm">
                     Email
                   </Label>
-                  <Input
-                    type="email"
-                    id="email"
-                    placeholder="moji@gmail.com"
-                    {...register("email")}
-                  ></Input>
-                  {errors.email && (
-                    <p className="text-destructive text-sm">
-                      {errors.email.message}
-                    </p>
-                  )}
+                  <Input type="email" id="email" placeholder="moji@gmail.com" {...register("email")}></Input>
+                  {errors.email && <p className="text-destructive text-sm">{errors.email.message}</p>}
                 </div>
               </div>
 
@@ -127,16 +98,8 @@ export function SignupForm({
                   <Label htmlFor="password" className="block text-sm">
                     Password
                   </Label>
-                  <Input
-                    type="password"
-                    id="password"
-                    {...register("password")}
-                  ></Input>
-                  {errors.password && (
-                    <p className="text-destructive text-sm">
-                      {errors.password.message}
-                    </p>
-                  )}
+                  <Input type="password" id="password" {...register("password")}></Input>
+                  {errors.password && <p className="text-destructive text-sm">{errors.password.message}</p>}
                 </div>
               </div>
 
@@ -154,11 +117,7 @@ export function SignupForm({
             </div>
           </form>
           <div className="bg-muted relative hidden md:block">
-            <img
-              src="/placeholderSignUp.png"
-              alt="Image"
-              className="absolute top-1/2 -translate-y-1/2 object-cover"
-            />
+            <img src="/placeholderSignUp.png" alt="Image" className="absolute top-1/2 -translate-y-1/2 object-cover" />
           </div>
         </CardContent>
       </Card>
