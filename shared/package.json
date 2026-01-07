@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.js"
   },
   "dependencies": {
     "zod": "^4.3.5"

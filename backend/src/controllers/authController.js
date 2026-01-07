@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import User from "../models/User.js";
 import Session from "../models/Session.js";
+import { signUpSchema } from "@moji/shared";
 
 const ACCESS_TOKEN_TTL = "30m";
 const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000;
@@ -13,15 +14,9 @@ const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000;
  */
 export const signUp = async (req, res) => {
   try {
-    const { username, password, email, firstName, lastName } = req.body;
-
     // kiểm tra input
-    if (!username || !password || !email || !firstName || !lastName) {
-      return res.status(400).json({
-        message:
-          "Không thể thiếu username, password, email, firstName và lastName",
-      });
-    }
+    const data = SignUpSchema.parse(req.body);
+    const { username, password, email, firstName, lastName } = data;
 
     // kiểm tra user đã tồn tại hay chưa
     const duplicate = await User.findOne({ username });
