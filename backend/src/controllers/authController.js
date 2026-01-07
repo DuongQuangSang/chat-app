@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import User from "../models/User.js";
 import Session from "../models/Session.js";
-import { signUpSchema } from "@moji/shared";
 
 const ACCESS_TOKEN_TTL = "30m";
 const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000;
@@ -14,9 +13,7 @@ const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000;
  */
 export const signUp = async (req, res) => {
   try {
-    // kiểm tra input
-    const data = SignUpSchema.parse(req.body);
-    const { username, password, email, firstName, lastName } = data;
+    const { username, password, email, firstName, lastName } = req.body;
 
     // kiểm tra user đã tồn tại hay chưa
     const duplicate = await User.findOne({ username });
