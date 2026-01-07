@@ -7,3 +7,8 @@ export const signUpSchema: z.ZodObject<{
   email: z.ZodString;
   password: z.ZodString;
 }>;
+
+export const signInSchema: z.ZodObject<{
+  username: z.ZodString;
+  password: z.ZodString;
+}>;
