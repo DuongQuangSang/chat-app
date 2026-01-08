@@ -1,17 +1,14 @@
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router";
 
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { signUpSchema } from "@moji/shared";
+import { signUpSchema, type SignUpInput } from "@moji/shared";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useNavigate } from "react-router";
-
-type SignUpFormInput = z.infer<typeof signUpSchema>;
 
 export function SignupForm({ className, ...props }: React.ComponentProps<"div">) {
   const { signUp } = useAuthStore();
@@ -20,11 +17,11 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignUpFormInput>({
+  } = useForm<SignUpInput>({
     resolver: zodResolver(signUpSchema),
   });
 
-  const onSubmit = async (data: SignUpFormInput) => {
+  const onSubmit = async (data: SignUpInput) => {
     // gọi API signup
     try {
       await signUp(data);

@@ -1,13 +1,12 @@
-import { z } from "zod";
-import { userBaseSchema, signUpSchema } from "@moji/shared";
-
-export type User = z.infer<typeof userBaseSchema>;
-export type SignUpFormInput = z.infer<typeof signUpSchema>;
+import { type User, type SignUpInput, type SignInInput } from "@moji/shared";
 
 export interface AuthState {
   accessToken: string | null;
   user: User | null;
   loading: boolean;
 
-  signUp: (data: SignUpFormInput) => Promise<void>;
+  clearState: () => void;
+  signUp: (data: SignUpInput) => Promise<void>;
+  signIn: (data: SignInInput) => Promise<void>;
+  signOut: () => Promise<void>;
 }

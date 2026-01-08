@@ -49,12 +49,6 @@ export const signIn = async (req, res) => {
   try {
     // kiểm tra input
     const { username, password } = req.body;
-    if (!username || !password) {
-      return res.status(400).json({
-        message:
-          "Không thể thiếu username, password, email, firstName và lastName",
-      });
-    }
 
     // so sánh password
     const user = await User.findOne({ username });

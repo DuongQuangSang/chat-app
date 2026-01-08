@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+/* schemas */
 export const signUpSchema: z.ZodObject<{
   lastName: z.ZodString;
   firstName: z.ZodString;
@@ -24,3 +25,8 @@ export const userBaseSchema: z.ZodObject<{
   createdAt: z.ZodOptional<z.ZodString>;
   updatedAt: z.ZodOptional<z.ZodString>;
 }>;
+
+/* inferred types */
+export type SignUpInput = z.infer<typeof signUpSchema>;
+export type SignInInput = z.infer<typeof signInSchema>;
+export type User = z.infer<typeof userBaseSchema>;
