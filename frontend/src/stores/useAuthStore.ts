@@ -1,17 +1,22 @@
 import { create } from "zustand";
 import { toast } from "sonner";
-import { z } from "zod";
 
-import { signUpSchema } from "@moji/shared";
+import { type SignUpInput, type SignInInput } from "@moji/shared";
 import { authService } from "@/services/authService";
 import type { AuthState } from "@/types/store";
-
-type SignUpInput = z.infer<typeof signUpSchema>;
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   accessToken: null,
   user: null,
   loading: false,
+
+  clearState: () => {
+    set({
+      accessToken: null,
+      user: null,
+      loading: false,
+    });
+  },
 
   signUp: async (data: SignUpInput) => {
     try {
@@ -26,6 +31,30 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       throw error;
     } finally {
       set({ loading: false });
+    }
+  },
+  signIn: async (data: SignInInput) => {
+    try {
+      set({ loading: true });
+      const { accessToken } = await authService.signIn(data);
+      set({ accessToken });
+      toast.success("Chào mừng bạn quay lại với Moji");
+    } catch (error) {
+      console.error(error);
+      toast.error("Đăng nhập không thành công");
+      throw error;
+    }
+  },
+
+  signOut: async () => {
+    try {
+      get().clearState();
+      await authService.signOut();
+      toast.success("Đăng xuất thành công");
+    } catch (error) {
+      console.error(error);
+      toast.error("Đăng xuất không thành công");
+      throw error;
     }
   },
 }));

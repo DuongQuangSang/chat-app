@@ -1,12 +1,16 @@
-import { z } from "zod";
 import api from "@/lib/axios";
-import { signUpSchema } from "@moji/shared";
-
-type SignUpInput = z.infer<typeof signUpSchema>;
+import { type SignUpInput, type SignInInput } from "@moji/shared";
 
 export const authService = {
   signUp: async (data: SignUpInput) => {
     const res = await api.post("/auth/signup", data, { withCredentials: true });
     return res.data;
+  },
+  signIn: async (data: SignInInput) => {
+    const res = await api.post("/auth/signin", data, { withCredentials: true });
+    return res.data;
+  },
+  signOut: async () => {
+    return await api.post("/auth/signout", { withCredentials: true });
   },
 };

@@ -1,30 +1,34 @@
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router";
 
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { signInSchema } from "@moji/shared";
+import { signInSchema, type SignInInput } from "@moji/shared";
+import { useAuthStore } from "@/stores/useAuthStore";
 
-type SignInFormInput = z.infer<typeof signInSchema>;
-
-export function SigninForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+export function SigninForm({ className, ...props }: React.ComponentProps<"div">) {
+  const { signIn } = useAuthStore();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignInFormInput>({
+  } = useForm<SignInInput>({
     resolver: zodResolver(signInSchema),
   });
 
-  const onSubmit = async (data: SignInFormInput) => {
-    // gọi API signup
+  const onSubmit = async (data: SignInInput) => {
+    // gọi API signin
+    try {
+      await signIn(data);
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -40,9 +44,7 @@ export function SigninForm({
                 </a>
 
                 <h1 className="text-2xl font-bold">Chào mừng quay lại</h1>
-                <p className="text-muted-foreground text-balance">
-                  Đăng nhập vào tài khoản Moji của bạn
-                </p>
+                <p className="text-muted-foreground text-balance">Đăng nhập vào tài khoản Moji của bạn</p>
               </div>
 
               {/* username */}
@@ -51,16 +53,8 @@ export function SigninForm({
                   <Label htmlFor="username" className="block text-sm">
                     Tên đăng nhập
                   </Label>
-                  <Input
-                    type="text"
-                    id="username"
-                    {...register("username")}
-                  ></Input>
-                  {errors.username && (
-                    <p className="text-destructive text-sm">
-                      {errors.username.message}
-                    </p>
-                  )}
+                  <Input type="text" id="username" {...register("username")}></Input>
+                  {errors.username && <p className="text-destructive text-sm">{errors.username.message}</p>}
                 </div>
               </div>
 
@@ -70,16 +64,8 @@ export function SigninForm({
                   <Label htmlFor="password" className="block text-sm">
                     Password
                   </Label>
-                  <Input
-                    type="password"
-                    id="password"
-                    {...register("password")}
-                  ></Input>
-                  {errors.password && (
-                    <p className="text-destructive text-sm">
-                      {errors.password.message}
-                    </p>
-                  )}
+                  <Input type="password" id="password" {...register("password")}></Input>
+                  {errors.password && <p className="text-destructive text-sm">{errors.password.message}</p>}
                 </div>
               </div>
 
@@ -97,11 +83,7 @@ export function SigninForm({
             </div>
           </form>
           <div className="bg-muted relative hidden md:block">
-            <img
-              src="/placeholder.png"
-              alt="Image"
-              className="absolute top-1/2 -translate-y-1/2 object-cover"
-            />
+            <img src="/placeholder.png" alt="Image" className="absolute top-1/2 -translate-y-1/2 object-cover" />
           </div>
         </CardContent>
       </Card>
