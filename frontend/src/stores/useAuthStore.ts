@@ -28,7 +28,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch (error) {
       console.error(error);
       toast.error("Đăng ký không thành công");
-      throw error;
     } finally {
       set({ loading: false });
     }
@@ -38,11 +37,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ loading: true });
       const { accessToken } = await authService.signIn(data);
       set({ accessToken });
+
+      await get().fetchMe();
+
       toast.success("Chào mừng bạn quay lại với Moji");
     } catch (error) {
       console.error(error);
       toast.error("Đăng nhập không thành công");
-      throw error;
+    } finally {
+      set({ loading: false });
     }
   },
 
@@ -54,7 +57,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch (error) {
       console.error(error);
       toast.error("Đăng xuất không thành công");
-      throw error;
+    }
+  },
+  fetchMe: async () => {
+    try {
+      set({ loading: true });
+      const user = await authService.fetchMe();
+
+      set({ user });
+    } catch (error) {
+      console.error(error);
+      set({
+        accessToken: null,
+        user: null,
+      });
+      toast.error("Đăng xuất không thành công");
+    } finally {
+      set({ loading: false });
     }
   },
 }));

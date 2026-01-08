@@ -9,4 +9,5 @@ export interface AuthState {
   signUp: (data: SignUpInput) => Promise<void>;
   signIn: (data: SignInInput) => Promise<void>;
   signOut: () => Promise<void>;
+  fetchMe: () => Promise<void>;
 }
