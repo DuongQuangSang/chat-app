@@ -16,4 +16,39 @@ api.interceptors.request.use((config) => {
 
   return config;
 });
+
+// tự động gọi refresh api sau khi access token hết hạn
+api.interceptors.response.use(
+  (res) => res,
+  async (error) => {
+    const originalReq = error.config;
+
+    if (error.response?.status !== 401 || originalReq._retry) {
+      return Promise.reject(error);
+    }
+
+    if (
+      originalReq.url?.endsWith("/auth/signin") ||
+      originalReq.url?.endsWith("/auth/signup") ||
+      originalReq.url?.endsWith("/auth/refresh")
+    ) {
+      return Promise.reject(error);
+    }
+
+    originalReq._retry = true;
+
+    try {
+      const res = await api.post("/auth/refresh");
+      const newAccessToken = res.data.accessToken;
+
+      useAuthStore.getState().setAccessToken(newAccessToken);
+
+      originalReq.headers.Authorization = `Bearer ${newAccessToken}`;
+      return api(originalReq);
+    } catch (refreshError) {
+      useAuthStore.getState().clearState();
+      return Promise.reject(refreshError);
+    }
+  }
+);
 export default api;

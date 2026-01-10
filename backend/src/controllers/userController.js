@@ -11,3 +11,11 @@ export const authMe = async (req, res) => {
     return res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };
+
+/**
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ */
+export const test = async (req, res) => {
+  return res.sendStatus(204);
+};
