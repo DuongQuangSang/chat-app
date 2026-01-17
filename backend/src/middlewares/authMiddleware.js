@@ -28,7 +28,7 @@ const protectedRoute = async (req, res, next) => {
 
     // trả user về trong req
     req.user = user;
-    next();
+    return next();
   } catch (error) {
     console.error("Lỗi khi duyệt qua protectedRoute", error);
     return res.status(500).json({

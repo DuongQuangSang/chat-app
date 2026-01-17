@@ -24,7 +24,7 @@ export const signUp = async (req, res) => {
     }
 
     // user chưa tồn tại -> hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password.trim(), 10);
 
     // tạo user mới
     await User.create({
@@ -58,8 +58,8 @@ export const signIn = async (req, res) => {
       });
     }
 
-    const passwordCorrect = await bcrypt.compare(password, user.hashedPassword);
-
+    const passwordCorrect = await bcrypt.compare(password.trim(), user.hashedPassword);
+    
     if (!passwordCorrect) {
       return res.status(401).json({
         message: "Username hoặc password không chính xác",
