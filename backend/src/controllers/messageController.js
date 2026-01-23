@@ -1,6 +1,7 @@
 import Conversation from "../models/Conversation.js";
 import Message from "../models/Message.js";
-import { updateConversationAfterCreateMessage } from "../utils/messageHelper.js";
+import { emitNewMessage, updateConversationAfterCreateMessage } from "../utils/messageHelper.js";
+import { io } from "../socket/index.js";
 
 /**
  * @param {import("express").Request} req
@@ -40,6 +41,8 @@ export const sendDirectMessage = async (req, res) => {
     updateConversationAfterCreateMessage(conversation, message, senderId);
 
     await conversation.save();
+    emitNewMessage(io, conversation, message);
+
     return res.status(201).json({ message });
   } catch (error) {
     console.error("Lỗi xảy ra khi gọi sendDirectMessage", error);
@@ -66,6 +69,8 @@ export const sendGroupMessage = async (req, res) => {
     updateConversationAfterCreateMessage(conversation, message, senderId);
 
     await conversation.save();
+    emitNewMessage(io, conversation, message);
+
     return res.status(201).json({ message });
   } catch (error) {
     console.error("Lỗi xảy ra khi gọi sendGroupMessage", error);

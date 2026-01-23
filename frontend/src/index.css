@@ -68,27 +68,11 @@
     --radius: 1rem;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(var(--primary)),
-      hsl(var(--primary-glow))
-    );
-    --gradient-chat: linear-gradient(
-      135deg,
-      hsl(280, 100%, 65%),
-      hsl(320, 100%, 70%)
-    );
-    --gradient-accent: linear-gradient(
-      90deg,
-      hsl(var(--accent)),
-      hsl(200, 100%, 70%)
-    );
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-chat: linear-gradient(135deg, hsl(280, 100%, 65%), hsl(320, 100%, 70%));
+    --gradient-accent: linear-gradient(90deg, hsl(var(--accent)), hsl(200, 100%, 70%));
 
-    --gradient-glass: linear-gradient(
-      135deg,
-      hsl(250, 100%, 98%) 0%,
-      hsl(260, 50%, 96%) 100%
-    );
+    --gradient-glass: linear-gradient(135deg, hsl(250, 100%, 98%) 0%, hsl(260, 50%, 96%) 100%);
 
     /* pattern craft */
     --gradient-purple: radial-gradient(
@@ -167,26 +151,10 @@
     --ring: 280 100% 70%;
 
     /* Dark mode gradients */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(280, 100%, 70%),
-      hsl(320, 100%, 80%)
-    );
-    --gradient-chat: linear-gradient(
-      135deg,
-      hsl(280, 100%, 70%),
-      hsl(320, 100%, 75%)
-    );
-    --gradient-accent: linear-gradient(
-      90deg,
-      hsl(180, 100%, 60%),
-      hsl(200, 100%, 70%)
-    );
-    --gradient-glass: linear-gradient(
-      45deg,
-      hsl(240, 15%, 12%) 0%,
-      hsl(240, 15%, 18%) 100%
-    );
+    --gradient-primary: linear-gradient(135deg, hsl(280, 100%, 70%), hsl(320, 100%, 80%));
+    --gradient-chat: linear-gradient(135deg, hsl(280, 100%, 70%), hsl(320, 100%, 75%));
+    --gradient-accent: linear-gradient(90deg, hsl(180, 100%, 60%), hsl(200, 100%, 70%));
+    --gradient-glass: linear-gradient(45deg, hsl(240, 15%, 12%) 0%, hsl(240, 15%, 18%) 100%);
 
     --gradient-purple: radial-gradient(
       125% 125% at 50% 10%,
@@ -210,7 +178,7 @@
   }
 
   body {
-    @apply text-slate-800 dark:text-slate-200;
+    @apply text-slate-800 dark:text-slate-200 bg-background;
   }
 }
 
@@ -280,6 +248,12 @@
     box-shadow: var(--shadow-bubble);
   }
 
+  /* Scroolbar */
+  .beautiful-scrollbar {
+    @apply scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent dark:scrollbar-thumb-slate-600;
+
+  }
+
   /* Animations */
   .transition-bounce {
     transition: var(--transition-bounce);
@@ -313,5 +287,47 @@
       opacity: 1;
       transform: translateY(0) scale(1);
     }
+  }
+}
+
+:root {
+  --sidebar: hsl(0 0% 98%);
+  --sidebar-foreground: hsl(240 5.3% 26.1%);
+  --sidebar-primary: hsl(240 5.9% 10%);
+  --sidebar-primary-foreground: hsl(0 0% 98%);
+  --sidebar-accent: hsl(240 4.8% 95.9%);
+  --sidebar-accent-foreground: hsl(240 5.9% 10%);
+  --sidebar-border: hsl(220 13% 91%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+.dark {
+  --sidebar: hsl(240 5.9% 10%);
+  --sidebar-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-primary: hsl(224.3 76.3% 48%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(240 3.7% 15.9%);
+  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-border: hsl(240 3.7% 15.9%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+@theme inline {
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }

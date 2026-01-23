@@ -126,7 +126,7 @@ export const getMessages = async (req, res) => {
 
     if (messages.length > Number(limit)) {
       const nextMessage = messages[messages.length - 1];
-      nextCursor = nextMessage.createAt.toISOString();
+      nextCursor = nextMessage.createdAt.toISOString();
       messages.pop();
     }
 
@@ -139,5 +139,16 @@ export const getMessages = async (req, res) => {
   } catch (error) {
     console.error("Lỗi khi gọi getMessages", error);
     return res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};
+
+export const getUserConversationForSocketIO = async (userId) => {
+  try {
+    const conversations = await Conversation.find({ "participants.userId": userId }, { _id: 1 });
+
+    return conversations.map((c) => c._id.toString());
+  } catch (error) {
+    console.error("Lỗi khi gọi getUserConversationForSocketIO", error);
+    return [];
   }
 };
