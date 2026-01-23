@@ -2,7 +2,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.MODE === "development" ? "http://localhost:5001/api" : "/api",
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
 });
 
@@ -23,6 +23,12 @@ api.interceptors.response.use(
   async (error) => {
     const originalReq = error.config;
 
+    // 🔴 1️⃣ CHẶN REFRESH KHI ĐANG LOGOUT (VỊ TRÍ ĐÚNG)
+    const { isLoggingOut } = useAuthStore.getState();
+    if (isLoggingOut) {
+      return Promise.reject(error);
+    }
+
     if (error.response?.status !== 401 || originalReq._retry) {
       return Promise.reject(error);
     }
@@ -30,7 +36,8 @@ api.interceptors.response.use(
     if (
       originalReq.url?.endsWith("/auth/signin") ||
       originalReq.url?.endsWith("/auth/signup") ||
-      originalReq.url?.endsWith("/auth/refresh")
+      originalReq.url?.endsWith("/auth/refresh") ||
+      originalReq.url?.endsWith("/auth/signout") // ✅ BẮT BUỘC
     ) {
       return Promise.reject(error);
     }

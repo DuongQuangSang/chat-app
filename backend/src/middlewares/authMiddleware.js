@@ -31,9 +31,16 @@ const protectedRoute = async (req, res, next) => {
     return next();
   } catch (error) {
     console.error("Lỗi khi duyệt qua protectedRoute", error);
-    return res.status(500).json({
-      message: "Lỗi hệ thống",
-    });
+
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Access token hết hạn" });
+    }
+
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ message: "Access token không hợp lệ" });
+    }
+
+    return res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };
 

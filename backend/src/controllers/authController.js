@@ -4,7 +4,7 @@ import crypto from "crypto";
 import User from "../models/User.js";
 import Session from "../models/Session.js";
 
-const ACCESS_TOKEN_TTL = "30m";
+const ACCESS_TOKEN_TTL = "1m";
 const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000;
 
 /**
@@ -59,7 +59,7 @@ export const signIn = async (req, res) => {
     }
 
     const passwordCorrect = await bcrypt.compare(password.trim(), user.hashedPassword);
-    
+
     if (!passwordCorrect) {
       return res.status(401).json({
         message: "Username hoặc password không chính xác",
